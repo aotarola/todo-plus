@@ -11,17 +11,18 @@ import android.widget.EditText;
 public class EditItemActivity extends AppCompatActivity {
 
     EditText etEditItemText;
-    Integer itemPosition;
+    Integer oldItemPosition;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_item);
         etEditItemText =  (EditText) findViewById(R.id.etEditItemText);
-        String itemValue = getIntent().getStringExtra("itemValue");
-        itemPosition = getIntent().getIntExtra("itemPosition",0);
-        etEditItemText.setText(itemValue);
-        etEditItemText.setSelection(itemValue.length());
+        String oldItemText = getIntent().getStringExtra("oldItemText");
+        oldItemPosition = getIntent().getIntExtra("oldItemPOsition",0);
+        etEditItemText.setText(oldItemText);
+        etEditItemText.setSelection(oldItemText.length());
     }
 
     @Override
@@ -49,7 +50,7 @@ public class EditItemActivity extends AppCompatActivity {
     public void onSubmit(View v) {
         Intent data = new Intent();
         data.putExtra("updatedItemText", etEditItemText.getText().toString());
-        data.putExtra("itemPosition",itemPosition);
+        data.putExtra("itemPosition",oldItemPosition);
         setResult(RESULT_OK, data); // set result code and bundle data for response
         finish();
     }

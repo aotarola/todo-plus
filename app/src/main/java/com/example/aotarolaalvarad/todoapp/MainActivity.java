@@ -50,8 +50,8 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent myIntent = new Intent(MainActivity.this, EditItemActivity.class);
-                myIntent.putExtra("itemValue", todoItems.get(position) );
-                myIntent.putExtra("itemPosition", position);
+                myIntent.putExtra("oldItemText", todoItems.get(position) );
+                myIntent.putExtra("oldItemPosition", position);
                 startActivityForResult(myIntent, REQUEST_CODE);
             }
         });
