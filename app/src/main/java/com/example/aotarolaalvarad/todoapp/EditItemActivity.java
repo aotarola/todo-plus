@@ -20,7 +20,7 @@ public class EditItemActivity extends AppCompatActivity {
         setContentView(R.layout.activity_edit_item);
         etEditItemText =  (EditText) findViewById(R.id.etEditItemText);
         String oldItemText = getIntent().getStringExtra("oldItemText");
-        oldItemPosition = getIntent().getIntExtra("oldItemPOsition",0);
+        oldItemPosition = getIntent().getIntExtra("oldItemPosition",0);
         etEditItemText.setText(oldItemText);
         etEditItemText.setSelection(oldItemText.length());
     }

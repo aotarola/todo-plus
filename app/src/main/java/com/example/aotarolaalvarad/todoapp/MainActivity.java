@@ -66,16 +66,15 @@ public class MainActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == RESULT_OK && requestCode == REQUEST_CODE) {
             // Extract name value from result extras
-
             int position = data.getIntExtra("itemPosition", 0);
             String updatedItemText = data.getStringExtra("updatedItemText");
+
+            //Extract local Activity values
             String oldItemText = todoItems.get(position);
-
-
-            todoItems.set(position, updatedItemText);
 
             // Check if it's worth to write in data store
             if(updatedItemText != oldItemText) {
+                todoItems.set(position, updatedItemText);
                 aToDoAdapter.notifyDataSetChanged();
                 writeItems();
             }
