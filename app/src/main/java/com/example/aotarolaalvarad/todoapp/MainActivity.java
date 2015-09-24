@@ -66,13 +66,19 @@ public class MainActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == RESULT_OK && requestCode == REQUEST_CODE) {
             // Extract name value from result extras
-            String updatedItem = data.getExtras().getString("updatedItem");
-            int position = data.getExtras().getInt("itemPosition", 0);
-            todoItems.set(position, updatedItem);
-            aToDoAdapter.notifyDataSetChanged();
-            writeItems();
-            // Toast the name to display temporarily on screen
-            //Toast.makeText(this, name, Toast.LENGTH_SHORT).show();
+
+            int position = data.getIntExtra("itemPosition", 0);
+            String updatedItemText = data.getStringExtra("updatedItemText");
+            String oldItemText = todoItems.get(position);
+
+
+            todoItems.set(position, updatedItemText);
+
+            // Check if it's worth to write in data store
+            if(updatedItemText != oldItemText) {
+                aToDoAdapter.notifyDataSetChanged();
+                writeItems();
+            }
         }
     }
 
