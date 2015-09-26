@@ -10,21 +10,15 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.Toast;
 
-import org.apache.commons.io.FileUtils;
-
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
     private final int REQUEST_CODE = 200;
 
-    ArrayList<String> todoItems;
-    ArrayAdapter<String> aToDoAdapter;
+    List<TodoItem> todoItems;
+    ArrayAdapter<TodoItem> aToDoAdapter;
     ListView lvItems;
     EditText etEditText;
 
@@ -39,9 +33,8 @@ public class MainActivity extends AppCompatActivity {
         lvItems.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                todoItems.remove(position);
+                todoItems.remove(position).delete();
                 aToDoAdapter.notifyDataSetChanged();
-                writeItems();
                 return true;
             }
         });
@@ -50,7 +43,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent myIntent = new Intent(MainActivity.this, EditItemActivity.class);
-                myIntent.putExtra("oldItemText", todoItems.get(position) );
+                myIntent.putExtra("oldItemText", todoItems.get(position).toString() );
                 myIntent.putExtra("oldItemPosition", position);
                 startActivityForResult(myIntent, REQUEST_CODE);
             }
@@ -58,8 +51,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void populateArrayItems() {
-        readItems();
-        aToDoAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, todoItems);
+        todoItems = TodoItem.listAll(TodoItem.class);
+        aToDoAdapter = new ArrayAdapter<TodoItem>(this, android.R.layout.simple_list_item_1, todoItems);
     }
 
     @Override
@@ -70,35 +63,17 @@ public class MainActivity extends AppCompatActivity {
             String updatedItemText = data.getStringExtra("updatedItemText");
 
             //Extract local Activity values
-            String oldItemText = todoItems.get(position);
+            String oldItemText = todoItems.get(position).toString();
 
             // Check if it's worth to write in data store
             if(updatedItemText != oldItemText) {
-                todoItems.set(position, updatedItemText);
+                TodoItem selectedITem = new TodoItem(updatedItemText);
+                selectedITem.save();
+                todoItems.set(position, selectedITem);
                 aToDoAdapter.notifyDataSetChanged();
-                writeItems();
             }
         }
     }
-
-    private void readItems(){
-        File filesDir = getFilesDir();
-        File file = new File(filesDir,"todo.txt");
-        try {
-            todoItems = new ArrayList<String>(FileUtils.readLines(file));
-        }catch(IOException e){
-            todoItems = new ArrayList<String>();
-        }
-    }
-
-    private void writeItems(){
-        File filesDir = getFilesDir();
-        File file = new File(filesDir,"todo.txt");
-        try {
-            FileUtils.writeLines(file, todoItems);
-        }catch(IOException e){}
-    }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -123,8 +98,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void onAddItem(View view) {
-        aToDoAdapter.add(etEditText.getText().toString());
+        TodoItem newTodoITem = new TodoItem(etEditText.getText().toString());
+        aToDoAdapter.add(newTodoITem);
+        newTodoITem.save();
         etEditText.setText("");
-        writeItems();
     }
 }
