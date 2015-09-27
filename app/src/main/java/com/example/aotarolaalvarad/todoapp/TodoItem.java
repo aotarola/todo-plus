@@ -4,10 +4,25 @@ import android.nfc.Tag;
 
 import com.orm.SugarRecord;
 
-public class TodoItem extends SugarRecord<TodoItem>{
+import java.util.Date;
+import java.util.Enumeration;
+
+public class TodoItem extends SugarRecord{
 
     //attributes
     private String title;
+    private Date dueDate;
+
+    private Priority priority;
+
+    public static enum Priority {
+        LOW, MEDIUM, HIGH;
+
+        @Override
+        public String toString() {
+            return super.toString().toUpperCase();
+        }
+    }
 
     //Constructors
 
@@ -16,6 +31,8 @@ public class TodoItem extends SugarRecord<TodoItem>{
 
     public TodoItem(String title){
         this.title = title;
+        this.priority = Priority.MEDIUM;
+        this.dueDate = new Date();
     }
 
     //Overrides
@@ -35,5 +52,20 @@ public class TodoItem extends SugarRecord<TodoItem>{
         this.title = title;
     }
 
+    public Priority getPriority() {
+        return priority;
+    }
+
+    public void setPriority(Priority priority) {
+        this.priority = priority;
+    }
+
+    public Date getDueDate() {
+        return dueDate;
+    }
+
+    public void setDueDate(Date dueDate) {
+        this.dueDate = dueDate;
+    }
 
 }

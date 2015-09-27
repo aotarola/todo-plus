@@ -67,9 +67,9 @@ public class MainActivity extends AppCompatActivity {
 
             // Check if it's worth to write in data store
             if(updatedItemText != oldItemText) {
-                TodoItem selectedITem = new TodoItem(updatedItemText);
-                selectedITem.save();
-                todoItems.set(position, selectedITem);
+                TodoItem selectedItem = todoItems.get(position);
+                selectedItem.setTitle(updatedItemText);
+                selectedItem.save();
                 aToDoAdapter.notifyDataSetChanged();
             }
         }

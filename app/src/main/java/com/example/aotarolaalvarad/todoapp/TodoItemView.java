@@ -26,7 +26,7 @@ public class TodoItemView extends RelativeLayout {
 
     public void setItem(TodoItem item) {
         tvTitle.setText(item.getTitle());
-        tvPriority.setText(item.getTitle().toUpperCase());
+        tvPriority.setText(item.getPriority().toString());
     }
 
     private void setupChildren() {
