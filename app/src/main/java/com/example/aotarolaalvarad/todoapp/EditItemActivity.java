@@ -11,6 +11,8 @@ import android.widget.EditText;
 public class EditItemActivity extends AppCompatActivity {
 
     EditText etEditItemText;
+    EditText etEditDueDateText;
+    EditText etEditPriorityText;
     Integer oldItemPosition;
 
 
@@ -18,10 +20,22 @@ public class EditItemActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_item);
+        setTextBoxes();
+    }
+
+    protected void setTextBoxes(){
         etEditItemText =  (EditText) findViewById(R.id.etEditItemText);
+        etEditDueDateText =  (EditText) findViewById(R.id.etEditDueDateText);
+        etEditPriorityText =  (EditText) findViewById(R.id.etEditPriorityText);
+
         String oldItemText = getIntent().getStringExtra("oldItemText");
+        String oldDueDateText = getIntent().getStringExtra("oldDueDateText");
+        String oldPriorityText = getIntent().getStringExtra("oldPriorityText");
+
         oldItemPosition = getIntent().getIntExtra("oldItemPosition",0);
         etEditItemText.setText(oldItemText);
+        etEditDueDateText.setText(oldDueDateText);
+        etEditPriorityText.setText(oldPriorityText);
         etEditItemText.setSelection(oldItemText.length());
     }
 

@@ -11,6 +11,7 @@ import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
 
+import java.text.SimpleDateFormat;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
@@ -43,7 +44,13 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent myIntent = new Intent(MainActivity.this, EditItemActivity.class);
-                myIntent.putExtra("oldItemText", todoItems.get(position).toString() );
+                SimpleDateFormat format = new SimpleDateFormat("MM/dd/yyyy");
+
+                TodoItem selectedTodoItem = todoItems.get(position);
+
+                myIntent.putExtra("oldItemText", selectedTodoItem.getTitle() );
+                myIntent.putExtra("oldDueDateText", format.format(selectedTodoItem.getDueDate()));
+                myIntent.putExtra("oldPriorityText", selectedTodoItem.getPriority().toString() );
                 myIntent.putExtra("oldItemPosition", position);
                 startActivityForResult(myIntent, REQUEST_CODE);
             }

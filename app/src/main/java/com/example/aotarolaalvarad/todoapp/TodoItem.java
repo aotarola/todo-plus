@@ -1,11 +1,6 @@
 package com.example.aotarolaalvarad.todoapp;
-
-import android.nfc.Tag;
-
 import com.orm.SugarRecord;
-
 import java.util.Date;
-import java.util.Enumeration;
 
 public class TodoItem extends SugarRecord{
 
@@ -45,7 +40,7 @@ public class TodoItem extends SugarRecord{
     //Properties
 
     public String getTitle() {
-        return title;
+        return this.title;
     }
 
     public void setTitle(String title) {
