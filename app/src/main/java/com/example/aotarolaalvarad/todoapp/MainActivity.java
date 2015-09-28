@@ -52,7 +52,7 @@ public class MainActivity extends AppCompatActivity {
 
                 myIntent.putExtra("oldItemText", selectedTodoItem.getTitle() );
                 myIntent.putExtra("oldDueDateText", format.format(selectedTodoItem.getDueDate()));
-                myIntent.putExtra("oldPriorityText", selectedTodoItem.getPriority().toString() );
+                myIntent.putExtra("oldPriorityText", selectedTodoItem.getPriority());
                 myIntent.putExtra("oldItemPosition", position);
                 startActivityForResult(myIntent, REQUEST_CODE);
             }
@@ -72,7 +72,7 @@ public class MainActivity extends AppCompatActivity {
 
             String updatedItemText = data.getStringExtra("updatedItemText");
             String updatedDueDateText = data.getStringExtra("updatedDueDateText");
-            String updatedPriorityText = data.getStringExtra("updatedPriorityText");
+            TodoItem.Priority updatedPriorityText = (TodoItem.Priority)data.getSerializableExtra("updatedPriorityText");
 
             Date myDate = null;
             try {
@@ -80,7 +80,6 @@ public class MainActivity extends AppCompatActivity {
             } catch (ParseException e) {
                 e.printStackTrace();
             }
-
 
             TodoItem selectedItem = todoItems.get(position);
 

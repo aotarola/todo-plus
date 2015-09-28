@@ -6,14 +6,17 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.Spinner;
 
 public class EditItemActivity extends AppCompatActivity {
 
     EditText etEditItemText;
     EditText etEditDueDateText;
-    EditText etEditPriorityText;
     Integer oldItemPosition;
+    ArrayAdapter<TodoItem.Priority> priorityAdapter;
+    Spinner spPriority;
 
 
     @Override
@@ -26,16 +29,22 @@ public class EditItemActivity extends AppCompatActivity {
     protected void setTextBoxes(){
         etEditItemText =  (EditText) findViewById(R.id.etEditItemText);
         etEditDueDateText =  (EditText) findViewById(R.id.etEditDueDateText);
-        etEditPriorityText =  (EditText) findViewById(R.id.etEditPriorityText);
+        spPriority = (Spinner) findViewById(R.id.spinner);
+
+        priorityAdapter = new ArrayAdapter<TodoItem.Priority>(this,
+                android.R.layout.simple_list_item_1, TodoItem.Priority.values());
+
+        spPriority.setAdapter(priorityAdapter);
 
         String oldItemText = getIntent().getStringExtra("oldItemText");
         String oldDueDateText = getIntent().getStringExtra("oldDueDateText");
-        String oldPriorityText = getIntent().getStringExtra("oldPriorityText");
+        TodoItem.Priority oldPriority = (TodoItem.Priority)getIntent().getSerializableExtra("oldPriorityText");
+
+        spPriority.setSelection(priorityAdapter.getPosition(oldPriority));
 
         oldItemPosition = getIntent().getIntExtra("oldItemPosition",0);
         etEditItemText.setText(oldItemText);
         etEditDueDateText.setText(oldDueDateText);
-        etEditPriorityText.setText(oldPriorityText);
         etEditItemText.setSelection(oldItemText.length());
     }
 
@@ -63,9 +72,10 @@ public class EditItemActivity extends AppCompatActivity {
 
     public void onSubmit(View v) {
         Intent data = new Intent();
+
         data.putExtra("updatedItemText", etEditItemText.getText().toString());
         data.putExtra("updatedDueDateText", etEditDueDateText.getText().toString());
-        data.putExtra("updatedPriorityText", etEditPriorityText.getText().toString());
+        data.putExtra("updatedPriorityText", ((TodoItem.Priority)spPriority.getSelectedItem()));
         data.putExtra("itemPosition",oldItemPosition);
         setResult(RESULT_OK, data); // set result code and bundle data for response
         finish();
