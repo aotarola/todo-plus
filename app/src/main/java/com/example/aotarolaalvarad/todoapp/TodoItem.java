@@ -51,8 +51,8 @@ public class TodoItem extends SugarRecord{
         return priority;
     }
 
-    public void setPriority(Priority priority) {
-        this.priority = priority;
+    public void setPriority(String priority) {
+        this.priority = Priority.valueOf(priority);
     }
 
     public Date getDueDate() {

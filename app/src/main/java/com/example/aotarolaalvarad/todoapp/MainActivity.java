@@ -7,7 +7,9 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
+
+import java.text.ParseException;
+import java.util.Date;
 import android.widget.EditText;
 import android.widget.ListView;
 
@@ -67,18 +69,27 @@ public class MainActivity extends AppCompatActivity {
         if (resultCode == RESULT_OK && requestCode == REQUEST_CODE) {
             // Extract name value from result extras
             int position = data.getIntExtra("itemPosition", 0);
+
             String updatedItemText = data.getStringExtra("updatedItemText");
+            String updatedDueDateText = data.getStringExtra("updatedDueDateText");
+            String updatedPriorityText = data.getStringExtra("updatedPriorityText");
 
-            //Extract local Activity values
-            String oldItemText = todoItems.get(position).toString();
-
-            // Check if it's worth to write in data store
-            if(updatedItemText != oldItemText) {
-                TodoItem selectedItem = todoItems.get(position);
-                selectedItem.setTitle(updatedItemText);
-                selectedItem.save();
-                aToDoAdapter.notifyDataSetChanged();
+            Date myDate = null;
+            try {
+                myDate = new SimpleDateFormat("MM/dd/yyyy").parse(updatedDueDateText);
+            } catch (ParseException e) {
+                e.printStackTrace();
             }
+
+
+            TodoItem selectedItem = todoItems.get(position);
+
+            selectedItem.setTitle(updatedItemText);
+            selectedItem.setDueDate(myDate);
+            selectedItem.setPriority(updatedPriorityText); //TODO: refactor to use enums in view
+            selectedItem.save();
+            aToDoAdapter.notifyDataSetChanged();
+
         }
     }
 

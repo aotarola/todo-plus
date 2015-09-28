@@ -64,6 +64,8 @@ public class EditItemActivity extends AppCompatActivity {
     public void onSubmit(View v) {
         Intent data = new Intent();
         data.putExtra("updatedItemText", etEditItemText.getText().toString());
+        data.putExtra("updatedDueDateText", etEditDueDateText.getText().toString());
+        data.putExtra("updatedPriorityText", etEditPriorityText.getText().toString());
         data.putExtra("itemPosition",oldItemPosition);
         setResult(RESULT_OK, data); // set result code and bundle data for response
         finish();
