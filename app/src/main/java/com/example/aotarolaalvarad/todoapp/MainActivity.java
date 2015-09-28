@@ -1,6 +1,7 @@
 package com.example.aotarolaalvarad.todoapp;
 
 import android.content.Intent;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -13,10 +14,12 @@ import java.util.Date;
 import android.widget.EditText;
 import android.widget.ListView;
 
+import com.example.aotarolaalvarad.todoapp.EditItemDialog.EditItemDialogListener;
+
 import java.text.SimpleDateFormat;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements EditItemDialogListener {
 
     private final int REQUEST_CODE = 200;
 
@@ -42,21 +45,27 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        lvItems.setOnItemClickListener(new AdapterView.OnItemClickListener(){
+        lvItems.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent myIntent = new Intent(MainActivity.this, EditItemActivity.class);
-                SimpleDateFormat format = new SimpleDateFormat("MM/dd/yyyy");
-
                 TodoItem selectedTodoItem = todoItems.get(position);
 
-                myIntent.putExtra("oldItemText", selectedTodoItem.getTitle() );
-                myIntent.putExtra("oldDueDateText", format.format(selectedTodoItem.getDueDate()));
-                myIntent.putExtra("oldPriorityText", selectedTodoItem.getPriority());
-                myIntent.putExtra("oldItemPosition", position);
-                startActivityForResult(myIntent, REQUEST_CODE);
+                showEditDialog(selectedTodoItem, position);
             }
         });
+    }
+
+    private void showEditDialog(TodoItem selectedTodoItem, int position) {
+        FragmentManager fm = getSupportFragmentManager();
+        SimpleDateFormat format = new SimpleDateFormat("MM/dd/yyyy");
+
+        EditItemDialog editItemDialog = EditItemDialog.newInstance(
+                selectedTodoItem.getTitle(),
+                format.format(selectedTodoItem.getDueDate()),
+                selectedTodoItem.getPriority(),
+                position
+        );
+        editItemDialog.show(fm, "dialog_edit_item");
     }
 
     private void populateArrayItems() {
@@ -64,33 +73,7 @@ public class MainActivity extends AppCompatActivity {
         aToDoAdapter = new TodoItemAdapter(this, todoItems);
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (resultCode == RESULT_OK && requestCode == REQUEST_CODE) {
-            // Extract name value from result extras
-            int position = data.getIntExtra("itemPosition", 0);
 
-            String updatedItemText = data.getStringExtra("updatedItemText");
-            String updatedDueDateText = data.getStringExtra("updatedDueDateText");
-            TodoItem.Priority updatedPriorityText = (TodoItem.Priority)data.getSerializableExtra("updatedPriorityText");
-
-            Date myDate = null;
-            try {
-                myDate = new SimpleDateFormat("MM/dd/yyyy").parse(updatedDueDateText);
-            } catch (ParseException e) {
-                e.printStackTrace();
-            }
-
-            TodoItem selectedItem = todoItems.get(position);
-
-            selectedItem.setTitle(updatedItemText);
-            selectedItem.setDueDate(myDate);
-            selectedItem.setPriority(updatedPriorityText); //TODO: refactor to use enums in view
-            selectedItem.save();
-            aToDoAdapter.notifyDataSetChanged();
-
-        }
-    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -119,5 +102,23 @@ public class MainActivity extends AppCompatActivity {
         aToDoAdapter.add(newTodoITem);
         newTodoITem.save();
         etEditText.setText("");
+    }
+
+    @Override
+    public void onFinishEditDialog(String title, String dueDate, TodoItem.Priority priority, int position) {
+        TodoItem selectedItem = todoItems.get(position);
+
+        Date myDate = null;
+        try {
+            myDate = new SimpleDateFormat("MM/dd/yyyy").parse(dueDate);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        selectedItem.setTitle(title);
+        selectedItem.setDueDate(myDate);
+        selectedItem.setPriority(priority);
+        selectedItem.save();
+        aToDoAdapter.notifyDataSetChanged();
     }
 }
