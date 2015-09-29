@@ -15,6 +15,8 @@ import android.widget.EditText;
 import android.widget.ListView;
 
 import com.example.aotarolaalvarad.todoapp.EditItemDialog.EditItemDialogListener;
+import com.orm.query.Condition;
+import com.orm.query.Select;
 
 import java.text.SimpleDateFormat;
 import java.util.List;
@@ -39,7 +41,7 @@ public class MainActivity extends AppCompatActivity implements EditItemDialogLis
         lvItems.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                todoItems.remove(position).delete();
+                todoItems.remove(position).markAsDone();
                 aToDoAdapter.notifyDataSetChanged();
                 return true;
             }
@@ -63,14 +65,15 @@ public class MainActivity extends AppCompatActivity implements EditItemDialogLis
                 selectedTodoItem.getTitle(),
                 format.format(selectedTodoItem.getDueDate()),
                 selectedTodoItem.getPriority(),
-                selectedTodoItem.isDone(),
                 position
         );
         editItemDialog.show(fm, "dialog_edit_item");
     }
 
     private void populateArrayItems() {
-        todoItems = TodoItem.listAll(TodoItem.class);
+        todoItems = Select.from(TodoItem.class)
+                    .where(Condition.prop("is_done").eq("false"))
+                    .list();
         aToDoAdapter = new TodoItemAdapter(this, todoItems);
     }
 
@@ -106,7 +109,7 @@ public class MainActivity extends AppCompatActivity implements EditItemDialogLis
     }
 
     @Override
-    public void onFinishEditDialog(String title, String dueDate, TodoItem.Priority priority, boolean isDone, int position) {
+    public void onFinishEditDialog(String title, String dueDate, TodoItem.Priority priority, int position) {
         TodoItem selectedItem = todoItems.get(position);
 
         Date myDate = null;
@@ -119,7 +122,6 @@ public class MainActivity extends AppCompatActivity implements EditItemDialogLis
         selectedItem.setTitle(title);
         selectedItem.setDueDate(myDate);
         selectedItem.setPriority(priority);
-        selectedItem.setIsDone(isDone);
         selectedItem.save();
         aToDoAdapter.notifyDataSetChanged();
     }

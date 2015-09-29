@@ -13,6 +13,7 @@ public class TodoItem extends SugarRecord{
 
     private Priority priority;
 
+
     //Enums
 
     public static enum Priority {
@@ -34,7 +35,7 @@ public class TodoItem extends SugarRecord{
         this.title = title;
         this.priority = Priority.MEDIUM;
         this.dueDate = new Date();
-        this.isDone = true;
+        this.isDone = false;
     }
 
     //Overrides
@@ -69,5 +70,12 @@ public class TodoItem extends SugarRecord{
     public boolean isDone() { return isDone; }
 
     public void setIsDone(boolean isDone) { this.isDone = isDone; }
+
+    // methods
+
+    public void markAsDone() {
+        this.setIsDone(true);
+        this.save();
+    }
 
 }
