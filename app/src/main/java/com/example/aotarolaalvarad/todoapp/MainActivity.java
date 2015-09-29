@@ -63,6 +63,7 @@ public class MainActivity extends AppCompatActivity implements EditItemDialogLis
                 selectedTodoItem.getTitle(),
                 format.format(selectedTodoItem.getDueDate()),
                 selectedTodoItem.getPriority(),
+                selectedTodoItem.isDone(),
                 position
         );
         editItemDialog.show(fm, "dialog_edit_item");
@@ -105,7 +106,7 @@ public class MainActivity extends AppCompatActivity implements EditItemDialogLis
     }
 
     @Override
-    public void onFinishEditDialog(String title, String dueDate, TodoItem.Priority priority, int position) {
+    public void onFinishEditDialog(String title, String dueDate, TodoItem.Priority priority, boolean isDone, int position) {
         TodoItem selectedItem = todoItems.get(position);
 
         Date myDate = null;
@@ -118,6 +119,7 @@ public class MainActivity extends AppCompatActivity implements EditItemDialogLis
         selectedItem.setTitle(title);
         selectedItem.setDueDate(myDate);
         selectedItem.setPriority(priority);
+        selectedItem.setIsDone(isDone);
         selectedItem.save();
         aToDoAdapter.notifyDataSetChanged();
     }

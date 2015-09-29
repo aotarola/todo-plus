@@ -29,7 +29,7 @@ public class EditItemDialog extends DialogFragment implements OnClickListener {
     ArrayAdapter<TodoItem.Priority> priorityAdapter;
 
     public interface EditItemDialogListener {
-        void onFinishEditDialog(String title, String dueDate, TodoItem.Priority priority, int position);
+        void onFinishEditDialog(String title, String dueDate, TodoItem.Priority priority, boolean isDone, int position);
     }
 
     public EditItemDialog() {
@@ -38,12 +38,13 @@ public class EditItemDialog extends DialogFragment implements OnClickListener {
         // Use `newInstance` instead as shown below
     }
 
-    public static EditItemDialog newInstance(String title, String dueDate, TodoItem.Priority priority, int position) {
+    public static EditItemDialog newInstance(String title, String dueDate, TodoItem.Priority priority, boolean isDone, int position) {
         EditItemDialog frag = new EditItemDialog();
         Bundle args = new Bundle();
         args.putString("title", title);
         args.putString("dueDate", dueDate);
         args.putSerializable("priority", priority);
+        args.putBoolean("isDone", isDone);
         args.putInt("position", position);
         frag.setArguments(args);
         return frag;
@@ -100,6 +101,7 @@ public class EditItemDialog extends DialogFragment implements OnClickListener {
                         etTitle.getText().toString(),
                         etDueDate.getText().toString(),
                         ((TodoItem.Priority)spPriority.getSelectedItem()),
+                        true,
                         getArguments().getInt("position")
                 );
 

@@ -8,7 +8,12 @@ public class TodoItem extends SugarRecord{
     private String title;
     private Date dueDate;
 
+
+    private boolean isDone;
+
     private Priority priority;
+
+    //Enums
 
     public static enum Priority {
         LOW, MEDIUM, HIGH;
@@ -19,6 +24,7 @@ public class TodoItem extends SugarRecord{
         }
     }
 
+
     //Constructors
 
     public TodoItem(){
@@ -28,6 +34,7 @@ public class TodoItem extends SugarRecord{
         this.title = title;
         this.priority = Priority.MEDIUM;
         this.dueDate = new Date();
+        this.isDone = true;
     }
 
     //Overrides
@@ -39,9 +46,7 @@ public class TodoItem extends SugarRecord{
 
     //Properties
 
-    public String getTitle() {
-        return this.title;
-    }
+    public String getTitle() { return this.title; }
 
     public void setTitle(String title) {
         this.title = title;
@@ -59,8 +64,10 @@ public class TodoItem extends SugarRecord{
         return dueDate;
     }
 
-    public void setDueDate(Date dueDate) {
-        this.dueDate = dueDate;
-    }
+    public void setDueDate(Date dueDate) { this.dueDate = dueDate; }
+
+    public boolean isDone() { return isDone; }
+
+    public void setIsDone(boolean isDone) { this.isDone = isDone; }
 
 }
