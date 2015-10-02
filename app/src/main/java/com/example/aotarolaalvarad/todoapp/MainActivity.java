@@ -72,7 +72,7 @@ public class MainActivity extends AppCompatActivity implements EditItemDialogLis
 
     private void populateArrayItems() {
         todoItems = Select.from(TodoItem.class)
-                    .where(Condition.prop("is_done").eq("false"))
+                    .where(Condition.prop("is_done").eq(0))
                     .list();
         aToDoAdapter = new TodoItemAdapter(this, todoItems);
     }
