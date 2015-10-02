@@ -1,7 +1,7 @@
 # todo-plus
 A simple android todo list with a plus :)
 
-![demo](https://dl.dropboxusercontent.com/u/85382522/demo_small.gif)
+![demo](https://dl.dropboxusercontent.com/u/85382522/demo2.gif)
 
 # Installation
 
